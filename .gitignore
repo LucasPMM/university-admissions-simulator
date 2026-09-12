@@ -1,6 +1,11 @@
-.vscode
-a.out
-in.txt
-out.txt
-sisu
-valgrind-out.txt
+/.vscode/
+/build/
+/university-admissions-simulator
+/a.out
+/in.txt
+/out.txt
+/valgrind-out.txt
+*.o
+*.gcda
+*.gcno
+*.gcov
