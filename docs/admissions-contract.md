@@ -1,11 +1,10 @@
 # Admissions contract
 
-This document records the proposed target behavior for University Admissions Simulator. The seven
+This document defines the implemented behavior of University Admissions Simulator. The seven
 `tests/fixtures/legacy/*.out` files capture actual output from the original program before any
 source changes. Their Portuguese headings are historical evidence, not the target output language.
-The current code migration implements the seven characterization examples. Stable candidate IDs,
-duplicate-name correctness, and comprehensive rejection of invalid input belong to Phase 3 of
-`roadmap.md`.
+Current fixtures additionally cover duplicate candidate names, cascading removals, input limits,
+and malformed input.
 
 ## Input
 
@@ -25,12 +24,14 @@ files. Its line-oriented format is:
 ```
 
 Names occupy a line and may contain spaces. A course or candidate name must contain 1–99 bytes,
-excluding the line ending. Counts and seats are decimal integers; counts are nonnegative and seats
-are nonnegative. The target supports at most 1,000 courses and 100,000 candidates, subject to
+excluding the line ending, have at least one non-space character, and contain no ASCII control
+characters. Counts and seats are decimal integers; counts are nonnegative and seats
+are nonnegative. The program supports at most 1,000 courses and 100,000 candidates, subject to
 available memory. Zero courses are allowed only when there are zero candidates. Each candidate's
 two course indices are zero-based, valid, and distinct. Scores are finite, nonnegative decimal
 numbers representable by the program's numeric type. Candidate names do not have to be unique;
-input position is their identity. Course names may also repeat.
+input position is their identity. Course names may also repeat. Decimal scores may use an exponent,
+such as `4.2e1`; values that overflow or underflow to zero are invalid.
 
 Blank lines are not allowed in place of names. Spaces separate numeric fields. CRLF line endings
 and a final line without a newline are accepted. Unexpected trailing data is invalid.
@@ -85,7 +86,8 @@ messages must identify the failing input category; exact wording is not part of 
 - The original program uses names to match candidate records, so duplicate names can change the
   wrong application. The target accepts duplicate names using stable candidate IDs.
 - The original program has unsafe behavior for repeated preferences and malformed input. The
-  target rejects repeated preferences and malformed input instead of preserving that behavior.
+  current program rejects repeated preferences and malformed input instead of preserving that
+  behavior.
 - The original program prints `0.00` for underfilled cutoffs. The target preserves this rule.
 - The original report does not consistently separate empty courses. The target uses one blank line
   between all adjacent course reports.
