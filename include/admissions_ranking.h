@@ -3,8 +3,7 @@
 
 #include "admissions_model.h"
 
-void applicant_insert_ranked(ApplicantNode **head, ApplicantNode *applicant,
-                             int course_index);
-void course_update_cutoff(Course *course);
+void admissions_insert_ranked(Course *course, ApplicationNode *application, size_t course_index);
+void admissions_update_cutoffs(Admissions *admissions);
 
 #endif

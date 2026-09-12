@@ -1,67 +1,53 @@
 #include "admissions_model.h"
 
 #include <stdlib.h>
-#include <string.h>
 
-static void copy_name(char destination[ADMISSIONS_NAME_CAPACITY], const char *source) {
-    size_t length = strcspn(source, "\r\n");
-    if (length >= ADMISSIONS_NAME_CAPACITY) {
-        length = ADMISSIONS_NAME_CAPACITY - 1;
-    }
-    memcpy(destination, source, length);
-    destination[length] = '\0';
-}
+bool admissions_model_init(Admissions *admissions, size_t course_count, size_t candidate_count) {
+    admissions->courses = NULL;
+    admissions->course_count = course_count;
+    admissions->candidates = NULL;
+    admissions->candidate_count = candidate_count;
 
-Course *course_create(const char *name, int seats) {
-    Course *course = calloc(1, sizeof(*course));
-    if (course == NULL) {
-        return NULL;
-    }
-    copy_name(course->name, name);
-    course->seats = seats;
-    return course;
-}
-
-ApplicantNode *applicant_create(const char *name, float score, int first_choice,
-                                int second_choice) {
-    ApplicantNode *applicant = calloc(1, sizeof(*applicant));
-    if (applicant == NULL) {
-        return NULL;
-    }
-    copy_name(applicant->name, name);
-    applicant->score = score;
-    applicant->first_choice = first_choice;
-    applicant->second_choice = second_choice;
-    return applicant;
-}
-
-static void applicant_list_destroy(ApplicantNode *head) {
-    while (head != NULL) {
-        ApplicantNode *next = head->next;
-        free(head);
-        head = next;
-    }
-}
-
-void courses_destroy(Course **courses, size_t course_count) {
-    for (size_t index = 0; index < course_count; ++index) {
-        if (courses[index] != NULL) {
-            applicant_list_destroy(courses[index]->applicants);
-            free(courses[index]);
+    if (course_count != 0) {
+        admissions->courses = calloc(course_count, sizeof(*admissions->courses));
+        if (admissions->courses == NULL) {
+            admissions_model_destroy(admissions);
+            return false;
         }
     }
-    free(courses);
+    if (candidate_count != 0) {
+        admissions->candidates = calloc(candidate_count, sizeof(*admissions->candidates));
+        if (admissions->candidates == NULL) {
+            admissions_model_destroy(admissions);
+            return false;
+        }
+    }
+    return true;
 }
 
-ApplicantNode *applicant_remove_by_name(ApplicantNode *head, const char *name) {
-    ApplicantNode **current = &head;
-    while (*current != NULL && strcmp((*current)->name, name) != 0) {
-        current = &(*current)->next;
+ApplicationNode *application_node_create(Candidate *candidate) {
+    ApplicationNode *application = calloc(1, sizeof(*application));
+    if (application != NULL) {
+        application->candidate = candidate;
     }
-    if (*current != NULL) {
-        ApplicantNode *removed = *current;
-        *current = removed->next;
-        free(removed);
+    return application;
+}
+
+void admissions_model_destroy(Admissions *admissions) {
+    if (admissions->courses != NULL) {
+        for (size_t index = 0; index < admissions->course_count; ++index) {
+            ApplicationNode *application = admissions->courses[index].applications;
+            while (application != NULL) {
+                ApplicationNode *next = application->next;
+                free(application);
+                application = next;
+            }
+        }
     }
-    return head;
+    free(admissions->courses);
+    free(admissions->candidates);
+    admissions->courses = NULL;
+    admissions->course_count = 0;
+    admissions->candidates = NULL;
+    admissions->candidate_count = 0;
 }

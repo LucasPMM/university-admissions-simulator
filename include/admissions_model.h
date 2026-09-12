@@ -4,29 +4,43 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-enum { ADMISSIONS_NAME_CAPACITY = 100 };
+enum {
+    ADMISSIONS_NAME_CAPACITY = 100,
+    ADMISSIONS_MAX_COURSES = 1000,
+    ADMISSIONS_MAX_CANDIDATES = 100000
+};
 
-typedef struct ApplicantNode {
+typedef struct Candidate {
+    size_t id;
     char name[ADMISSIONS_NAME_CAPACITY];
-    int first_choice;
-    int second_choice;
+    double score;
+    size_t first_choice;
+    size_t second_choice;
     bool second_choice_removed;
-    float score;
-    struct ApplicantNode *next;
-} ApplicantNode;
+} Candidate;
+
+/* Each application references one authoritative candidate owned by Admissions. */
+typedef struct ApplicationNode {
+    Candidate *candidate;
+    struct ApplicationNode *next;
+} ApplicationNode;
 
 typedef struct Course {
     char name[ADMISSIONS_NAME_CAPACITY];
-    int seats;
-    float cutoff;
-    ApplicantNode *applicants;
+    size_t seats;
+    double cutoff;
+    ApplicationNode *applications;
 } Course;
 
-/* Callers own new objects. A course owns applicant nodes once they are inserted into its list. */
-Course *course_create(const char *name, int seats);
-ApplicantNode *applicant_create(const char *name, float score, int first_choice,
-                                int second_choice);
-void courses_destroy(Course **courses, size_t course_count);
-ApplicantNode *applicant_remove_by_name(ApplicantNode *head, const char *name);
+typedef struct Admissions {
+    Course *courses;
+    size_t course_count;
+    Candidate *candidates;
+    size_t candidate_count;
+} Admissions;
+
+bool admissions_model_init(Admissions *admissions, size_t course_count, size_t candidate_count);
+void admissions_model_destroy(Admissions *admissions);
+ApplicationNode *application_node_create(Candidate *candidate);
 
 #endif

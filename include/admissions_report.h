@@ -6,6 +6,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-void admissions_print_course(FILE *output, const Course *course, bool has_next);
+bool admissions_print_report(FILE *output, const Admissions *admissions);
 
 #endif

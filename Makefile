@@ -22,6 +22,7 @@ MODULES := main application admissions_io admissions_model admissions_ranking \
 SOURCES := $(addprefix src/,$(addsuffix .c,$(MODULES)))
 HEADERS := $(wildcard include/*.h)
 TEST_SCRIPT := tests/run_baseline.sh
+VALIDATION_SCRIPT := tests/run_validation.sh
 FIXTURES := tests/fixtures
 
 RELEASE_DIR := build/release/objects
@@ -70,13 +71,16 @@ $(COVERAGE_DIR)/$(TARGET): $(COVERAGE_OBJECTS)
 
 test: $(TARGET)
 	$(TEST_SCRIPT) ./$(TARGET) $(FIXTURES)
+	$(VALIDATION_SCRIPT) ./$(TARGET) $(FIXTURES)
 
 sanitize: $(SANITIZER_DIR)/$(TARGET)
 	ASAN_OPTIONS=$(ASAN_OPTIONS) $(TEST_SCRIPT) ./$(SANITIZER_DIR)/$(TARGET) $(FIXTURES)
+	ASAN_OPTIONS=$(ASAN_OPTIONS) $(VALIDATION_SCRIPT) ./$(SANITIZER_DIR)/$(TARGET) $(FIXTURES)
 
 coverage: $(COVERAGE_DIR)/$(TARGET)
 	@rm -f $(COVERAGE_OBJECTS:.o=.gcda)
 	$(TEST_SCRIPT) ./$(COVERAGE_DIR)/$(TARGET) $(FIXTURES)
+	$(VALIDATION_SCRIPT) ./$(COVERAGE_DIR)/$(TARGET) $(FIXTURES)
 	$(GCOV) -n -b -c $(COVERAGE_OBJECTS:.o=.gcno)
 
 analyze: $(ANALYZER_OBJECTS)
