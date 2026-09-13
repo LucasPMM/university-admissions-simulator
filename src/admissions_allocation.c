@@ -27,8 +27,7 @@ void admissions_resolve(Admissions *admissions) {
                  application != NULL && position < course->seats;
                  application = application->next, ++position) {
                 Candidate *candidate = application->candidate;
-                if (candidate->first_choice != course_index ||
-                    candidate->second_choice_removed) {
+                if (candidate->first_choice != course_index || candidate->second_choice_removed) {
                     continue;
                 }
 
