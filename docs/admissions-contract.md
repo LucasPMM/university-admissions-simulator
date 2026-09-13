@@ -2,7 +2,7 @@
 
 This document defines the implemented behavior of University Admissions Simulator. The seven
 `tests/fixtures/legacy/*.out` files capture actual output from the original program before any
-source changes. Their Portuguese headings are historical evidence, not the target output language.
+source changes. Their Portuguese headings are historical evidence; the current report is in English.
 Current fixtures additionally cover duplicate candidate names, cascading removals, input limits,
 and malformed input.
 
@@ -25,10 +25,10 @@ files. Its line-oriented format is:
 
 Names occupy a line and may contain spaces. A course or candidate name must contain 1–99 bytes,
 excluding the line ending, have at least one non-space character, and contain no ASCII control
-characters. Counts and seats are decimal integers; counts are nonnegative and seats
-are nonnegative. The program supports at most 1,000 courses and 100,000 candidates, subject to
-available memory. Zero courses are allowed only when there are zero candidates. Each candidate's
-two course indices are zero-based, valid, and distinct. Scores are finite, nonnegative decimal
+characters. Counts and seats are nonnegative decimal integers. The program supports at most 1,000
+courses and 100,000 candidates, subject to available memory. Zero courses are allowed only when
+there are zero candidates. Each candidate's two course indices are zero-based, valid, and distinct.
+Scores are finite, nonnegative decimal
 numbers representable by the program's numeric type. Candidate names do not have to be unique;
 input position is their identity. Course names may also repeat. Decimal scores may use an exponent,
 such as `4.2e1`; values that overflow or underflow to zero are invalid.
@@ -80,15 +80,15 @@ messages must identify the failing input category; exact wording is not part of 
 
 ## Legacy observations and intentional changes
 
-- The original program prints `Classificados` and `Lista de espera`; target headings are English.
+- The original program prints `Classificados` and `Lista de espera`; current headings are English.
 - The original list inserts first-choice candidates before second-choice candidates on a score
-  tie, and preserves input order within each category. The target makes this rule explicit.
+  tie, and preserves input order within each category. The current contract makes this rule explicit.
 - The original program uses names to match candidate records, so duplicate names can change the
-  wrong application. The target accepts duplicate names using stable candidate IDs.
+  wrong application. The current program accepts duplicate names using stable candidate IDs.
 - The original program has unsafe behavior for repeated preferences and malformed input. The
   current program rejects repeated preferences and malformed input instead of preserving that
   behavior.
-- The original program prints `0.00` for underfilled cutoffs. The target preserves this rule.
-- The original report does not consistently separate empty courses. The target uses one blank line
-  between all adjacent course reports.
-- The original report hides applicants on a zero-seat course. The target lists them as waiting.
+- The original program prints `0.00` for underfilled cutoffs. The current program preserves this rule.
+- The original report does not consistently separate empty courses. The current report uses one
+  blank line between all adjacent course reports.
+- The original report hides applicants on a zero-seat course. The current report lists them as waiting.

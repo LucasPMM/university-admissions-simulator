@@ -86,8 +86,8 @@ static bool require_line(Parser *parser, AdmissionsInputStatus category) {
     if (status == LINE_IO) {
         return fail(parser, ADMISSIONS_INPUT_IO, parser->line_number + 1);
     }
-    return fail(parser, category, status == LINE_END ? parser->line_number + 1
-                                                     : parser->line_number);
+    return fail(parser, category,
+                status == LINE_END ? parser->line_number + 1 : parser->line_number);
 }
 
 static char *skip_spaces(char *cursor) {
@@ -242,8 +242,8 @@ static bool parse_candidate(Parser *parser, size_t index) {
     size_t last_course = parser->admissions->course_count - 1;
     if (!parse_score(&cursor, &candidate->score) ||
         !parse_unsigned(&cursor, last_course, &candidate->first_choice) ||
-        !parse_unsigned(&cursor, last_course, &candidate->second_choice) ||
-        !at_line_end(cursor) || candidate->first_choice == candidate->second_choice) {
+        !parse_unsigned(&cursor, last_course, &candidate->second_choice) || !at_line_end(cursor) ||
+        candidate->first_choice == candidate->second_choice) {
         return fail(parser, ADMISSIONS_INPUT_CANDIDATE_DETAILS, parser->line_number);
     }
 

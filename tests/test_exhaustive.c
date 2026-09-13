@@ -94,8 +94,7 @@ static unsigned least_fixed_point(const SmallCase *test_case) {
 }
 
 static void build_model(const SmallCase *test_case, Admissions *admissions) {
-    assert(admissions_model_init(admissions, test_case->course_count,
-                                 test_case->candidate_count));
+    assert(admissions_model_init(admissions, test_case->course_count, test_case->candidate_count));
     for (size_t course = 0; course < test_case->course_count; ++course) {
         admissions->courses[course].seats = test_case->seats[course];
     }
@@ -212,8 +211,7 @@ static size_t enumerate_cases(size_t course_count, size_t maximum_candidates) {
     for (size_t candidate_count = 0; candidate_count <= maximum_candidates; ++candidate_count) {
         size_t candidate_combinations = power(candidate_variants, candidate_count);
         size_t seat_combinations = power(3, course_count);
-        for (size_t candidate_code = 0; candidate_code < candidate_combinations;
-             ++candidate_code) {
+        for (size_t candidate_code = 0; candidate_code < candidate_combinations; ++candidate_code) {
             SmallCase test_case = {.course_count = course_count,
                                    .candidate_count = candidate_count};
             size_t remaining_candidates = candidate_code;
