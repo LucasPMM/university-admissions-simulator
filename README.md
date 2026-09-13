@@ -73,7 +73,7 @@ Every course report lists admitted applicants, then its remaining applicants in 
 order. Scores are printed to two decimal places. The cutoff is the score of the last admitted
 applicant when every seat is filled; it is `0.00` for an underfilled or zero-seat course. Reports
 are separated by one blank line. See [the admissions contract](docs/admissions-contract.md) for
-the complete behavior specification and legacy decisions.
+the complete behavior specification and compatibility notes.
 
 ## Development
 

@@ -1,10 +1,9 @@
 # Admissions contract
 
-This document defines the implemented behavior of University Admissions Simulator. The seven
-`tests/fixtures/legacy/*.out` files capture actual output from the original program before any
-source changes. Their Portuguese headings are historical evidence; the current report is in English.
-Current fixtures additionally cover duplicate candidate names, cascading removals, input limits,
-and malformed input.
+This document defines the behavior of University Admissions Simulator. Regression fixtures under
+`tests/fixtures/` cover reports, duplicate names, cascading removals, input limits, and malformed
+input. The seven `tests/fixtures/legacy/*.out` files preserve the original program's output for
+comparison.
 
 ## Input
 
@@ -78,17 +77,16 @@ Invalid or incomplete input must produce no report on stdout, an English diagnos
 and a nonzero exit status. Allocation failures also return a nonzero status after cleanup. Error
 messages must identify the failing input category; exact wording is not part of the public format.
 
-## Legacy observations and intentional changes
+## Compatibility notes
 
-- The original program prints `Classificados` and `Lista de espera`; current headings are English.
+- The original program uses Portuguese section headings; the simulator uses English headings.
 - The original list inserts first-choice candidates before second-choice candidates on a score
-  tie, and preserves input order within each category. The current contract makes this rule explicit.
+  tie, and preserves input order within each category. This contract makes the rule explicit.
 - The original program uses names to match candidate records, so duplicate names can change the
-  wrong application. The current program accepts duplicate names using stable candidate IDs.
+  wrong application. The simulator accepts duplicate names using stable candidate IDs.
 - The original program has unsafe behavior for repeated preferences and malformed input. The
-  current program rejects repeated preferences and malformed input instead of preserving that
-  behavior.
-- The original program prints `0.00` for underfilled cutoffs. The current program preserves this rule.
-- The original report does not consistently separate empty courses. The current report uses one
-  blank line between all adjacent course reports.
-- The original report hides applicants on a zero-seat course. The current report lists them as waiting.
+  simulator rejects repeated preferences and malformed input.
+- The original program prints `0.00` for underfilled cutoffs. The simulator preserves this rule.
+- The original report does not consistently separate empty courses. The simulator uses one blank
+  line between all adjacent course reports.
+- The original report hides applicants on a zero-seat course. The simulator lists them as waiting.
