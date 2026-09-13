@@ -51,6 +51,8 @@ check_invalid count_overflow 1 'invalid course or candidate count' '184467440737
 check_invalid candidate_without_course 1 'invalid course or candidate count' '0 1\n'
 check_invalid missing_course_name 2 'invalid course name' '1 0\n'
 check_invalid blank_course_name 2 'invalid course name' '1 0\n\n1\n'
+check_invalid whitespace_course_name 2 'invalid course name' '1 0\n   \n1\n'
+check_invalid control_course_name 2 'invalid course name' '1 0\nA\tB\n1\n'
 check_invalid long_course_name 2 'invalid course name' "1 0\n${long_name}\n1\n"
 check_invalid negative_seats 3 'invalid seat count' '1 0\nA\n-1\n'
 check_invalid overflowing_seats 3 'invalid seat count' '1 0\nA\n18446744073709551616\n'
@@ -66,17 +68,21 @@ check_invalid nonfinite_infinity 7 'invalid score or course preferences' "${two_
 check_invalid overflowing_score 7 'invalid score or course preferences' "${two_courses}X\n1e9999 0 1\n"
 check_invalid underflowing_score 7 'invalid score or course preferences' "${two_courses}X\n1e-9999 0 1\n"
 check_invalid hexadecimal_score 7 'invalid score or course preferences' "${two_courses}X\n0x1p3 0 1\n"
+check_invalid malformed_exponent 7 'invalid score or course preferences' "${two_courses}X\n1e+ 0 1\n"
 check_invalid invalid_course_index 7 'invalid score or course preferences' "${two_courses}X\n1 0 2\n"
 check_invalid negative_course_index 7 'invalid score or course preferences' "${two_courses}X\n1 -1 1\n"
 check_invalid duplicate_choice 7 'invalid score or course preferences' "${two_courses}X\n1 0 0\n"
 check_invalid extra_candidate_field 7 'invalid score or course preferences' "${two_courses}X\n1 0 1 extra\n"
 check_invalid trailing_data 2 'unexpected trailing data' '0 0\nextra\n'
+check_invalid trailing_nul 2 'unexpected trailing data' '0 0\n\000\n'
 check_invalid embedded_nul 1 'invalid course or candidate count' '0\000 0\n'
 
 check_valid no_final_newline "$fixtures/zero_seats.out" \
     '2 1\nHistory\n0\nGeography\n1\nErin\n42 0 1'
 check_valid decimal_exponent "$fixtures/zero_seats.out" \
     '2 1\nHistory\n0\nGeography\n1\nErin\n42e0 0 1\n'
+check_valid explicit_plus_signs "$fixtures/zero_seats.out" \
+    '+2 +1\nHistory\n+0\nGeography\n+1\nErin\n+42e0 +0 +1\n'
 check_valid trailing_whitespace "$fixtures/zero_courses.out" '0 0\n \n\t\n'
 
 awk '{ printf "%s\r\n", $0 }' "$fixtures/basic.in" > "$temporary_dir/input"
@@ -94,3 +100,12 @@ printf '%s 0.00\nAdmitted\nWaiting list\n' "$maximum_name" \
 diff -u "$temporary_dir/expected.out" "$temporary_dir/actual.out"
 test ! -s "$temporary_dir/actual.err"
 printf 'PASS maximum_name_length\n'
+
+printf '2 1\nA\n0\nB\n0\n%s\n0 0 1\n' "$maximum_name" > "$temporary_dir/input"
+"$binary" < "$temporary_dir/input" > "$temporary_dir/actual.out" \
+    2> "$temporary_dir/actual.err"
+printf 'A 0.00\nAdmitted\nWaiting list\n%s 0.00\n\nB 0.00\nAdmitted\nWaiting list\n%s 0.00\n' \
+    "$maximum_name" "$maximum_name" > "$temporary_dir/expected.out"
+diff -u "$temporary_dir/expected.out" "$temporary_dir/actual.out"
+test ! -s "$temporary_dir/actual.err"
+printf 'PASS maximum_candidate_name_length\n'
