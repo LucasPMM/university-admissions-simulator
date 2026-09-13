@@ -13,7 +13,8 @@ enum {
 typedef struct Candidate {
     size_t id;
     char name[ADMISSIONS_NAME_CAPACITY];
-    double score;
+    /* Keep legacy single-precision ranking and two-decimal output semantics. */
+    float score;
     size_t first_choice;
     size_t second_choice;
     bool second_choice_removed;
@@ -28,7 +29,7 @@ typedef struct ApplicationNode {
 typedef struct Course {
     char name[ADMISSIONS_NAME_CAPACITY];
     size_t seats;
-    double cutoff;
+    float cutoff;
     ApplicationNode *applications;
 } Course;
 

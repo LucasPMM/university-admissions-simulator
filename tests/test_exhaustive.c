@@ -14,7 +14,7 @@ typedef struct SmallCase {
     size_t seats[MAX_TEST_COURSES];
     size_t first_choice[MAX_TEST_CANDIDATES];
     size_t second_choice[MAX_TEST_CANDIDATES];
-    double scores[MAX_TEST_CANDIDATES];
+    float scores[MAX_TEST_CANDIDATES];
 } SmallCase;
 
 static size_t power(size_t base, size_t exponent) {
@@ -138,7 +138,7 @@ static void verify_model(const SmallCase *test_case, const Admissions *admission
             application = application->next;
         }
         assert(application == NULL);
-        double expected_cutoff = 0.0;
+        float expected_cutoff = 0.0f;
         if (test_case->seats[course] > 0 && count >= test_case->seats[course]) {
             expected_cutoff = test_case->scores[expected[test_case->seats[course] - 1]];
         }
@@ -178,7 +178,7 @@ static void check_score_monotonicity(const SmallCase *test_case) {
     build_model(test_case, &original);
     for (size_t candidate = 0; candidate < test_case->candidate_count; ++candidate) {
         SmallCase increased = *test_case;
-        increased.scores[candidate] += 1.0;
+        increased.scores[candidate] += 1.0f;
         Admissions improved;
         build_model(&increased, &improved);
         size_t first = test_case->first_choice[candidate];
@@ -221,7 +221,7 @@ static size_t enumerate_cases(size_t course_count, size_t maximum_candidates) {
                 size_t preference = variant / SCORE_LEVELS;
                 test_case.first_choice[index] = first_options[preference];
                 test_case.second_choice[index] = second_options[preference];
-                test_case.scores[index] = (double)(variant % SCORE_LEVELS);
+                test_case.scores[index] = (float)(variant % SCORE_LEVELS);
             }
             check_score_monotonicity(&test_case);
             for (size_t seat_code = 0; seat_code < seat_combinations; ++seat_code) {

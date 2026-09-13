@@ -27,10 +27,9 @@ excluding the line ending, have at least one non-space character, and contain no
 characters. Counts and seats are nonnegative decimal integers. The program supports at most 1,000
 courses and 100,000 candidates, subject to available memory. Zero courses are allowed only when
 there are zero candidates. Each candidate's two course indices are zero-based, valid, and distinct.
-Scores are finite, nonnegative decimal
-numbers representable by the program's numeric type. Candidate names do not have to be unique;
-input position is their identity. Course names may also repeat. Decimal scores may use an exponent,
-such as `4.2e1`; values that overflow or underflow to zero are invalid.
+Scores are finite, nonnegative decimal numbers representable by C `float`. Candidate names do not
+have to be unique; input position is their identity. Course names may also repeat. Decimal scores
+may use an exponent, such as `4.2e1`; values that overflow or underflow to zero are invalid.
 
 Blank lines are not allowed in place of names. Spaces separate numeric fields. CRLF line endings
 and a final line without a newline are accepted. Unexpected trailing data is invalid.
@@ -45,6 +44,9 @@ order. The top `seats` applicants are admitted. A candidate admitted to their fi
 removed from their second-choice list. Resolve removals and promotions until no list changes.
 Candidates admitted only to a second choice remain eligible for their first-choice waiting list.
 No candidate may be admitted to two courses at once.
+
+Ranking compares the parsed single-precision scores. Decimal inputs that round to the same `float`
+are tied, even if their original decimal spellings differ.
 
 The cutoff is the score of the candidate in the final seat when every seat is filled. It is `0.00`
 when a course is underfilled, empty, or has zero seats, matching the original program. All applicants

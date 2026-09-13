@@ -120,7 +120,7 @@ static bool parse_unsigned(char **cursor, size_t maximum, size_t *value) {
     return true;
 }
 
-static bool parse_score(char **cursor, double *score) {
+static bool parse_score(char **cursor, float *score) {
     char *start = skip_spaces(*cursor);
     char *end = start;
     if (*end == '+') {
@@ -158,9 +158,9 @@ static bool parse_score(char **cursor, double *score) {
     }
     errno = 0;
     char *converted_end;
-    double parsed = strtod(start, &converted_end);
-    if (converted_end != end || !isfinite(parsed) || parsed < 0.0 ||
-        (errno == ERANGE && parsed == 0.0)) {
+    float parsed = strtof(start, &converted_end);
+    if (converted_end != end || !isfinite(parsed) || parsed < 0.0f ||
+        (errno == ERANGE && parsed == 0.0f)) {
         return false;
     }
     *score = parsed;

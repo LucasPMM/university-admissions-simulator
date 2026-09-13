@@ -51,8 +51,9 @@ count), then two lines per candidate (name and details):
 - Names may contain spaces, must be 1–99 bytes long with at least one non-space character, and
   cannot contain ASCII control characters. Names need not be unique.
 - Scores are finite, nonnegative decimal numbers, optionally in exponent notation. Values that
-  overflow or underflow to zero are rejected. The two preferences are distinct, zero-based course
-  indices.
+  overflow or underflow to zero in C `float` are rejected. Single-precision scores preserve the
+  original program's ranking and two-decimal rounding. The two preferences are distinct,
+  zero-based course indices.
 - Each name occupies its own line. Numeric fields are separated by whitespace. CRLF endings and
   a final line without a newline are accepted. Only whitespace may follow the last candidate.
 

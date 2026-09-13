@@ -25,7 +25,7 @@ void admissions_insert_ranked(Course *course, ApplicationNode *application, size
 void admissions_update_cutoffs(Admissions *admissions) {
     for (size_t index = 0; index < admissions->course_count; ++index) {
         Course *course = &admissions->courses[index];
-        course->cutoff = 0.0;
+        course->cutoff = 0.0f;
         if (course->seats == 0) {
             continue;
         }

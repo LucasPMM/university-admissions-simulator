@@ -69,9 +69,9 @@ static size_t rank_of(const Course *course, size_t candidate_id) {
     return 0;
 }
 
-static void make_ranking(Admissions *admissions, double changed_score) {
+static void make_ranking(Admissions *admissions, float changed_score) {
     assert(admissions_model_init(admissions, 2, 4));
-    const double scores[] = {changed_score, 90.0, 90.0, 95.0};
+    const float scores[] = {changed_score, 90.0f, 90.0f, 95.0f};
     const size_t first_choices[] = {1, 0, 0, 1};
     for (size_t index = 0; index < 4; ++index) {
         Candidate *candidate = &admissions->candidates[index];
@@ -171,12 +171,12 @@ static void test_parser_and_report(void) {
 
     char boundary_input[256];
     int written = snprintf(boundary_input, sizeof(boundary_input),
-                           "2 1\nA\n%zu\nB\n0\nX\n%.17g 0 1\n", SIZE_MAX, DBL_MAX);
+                           "2 1\nA\n%zu\nB\n0\nX\n%.9g 0 1\n", SIZE_MAX, (double)FLT_MAX);
     assert(written > 0 && (size_t)written < sizeof(boundary_input));
     input = input_from_text(boundary_input);
     assert(admissions_parse(input, &admissions, &error));
     assert(admissions.courses[0].seats == SIZE_MAX);
-    assert(admissions.candidates[0].score == DBL_MAX);
+    assert(admissions.candidates[0].score == FLT_MAX);
     admissions_model_destroy(&admissions);
     fclose(input);
 
